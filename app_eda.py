@@ -12,9 +12,10 @@ plt.rcParams['axes.unicode_minus'] = False
 if platform.system() == 'Linux':
     rc('font', family='NanumGothic')
 
+
 def run_eda_app() :
 
-    df = pd.read_csv('Car_Purchasing_Data.csv', encoding='ISO-8859-1')
+    df = pd.read_csv('data/공무원연금공단_공무원연금주요통계(지역별 가입자 추이)_20211231.csv', encoding='ISO-8859-1')
 
     st.subheader('데이터프레임 확인')
     st.dataframe(df.head(3))
@@ -39,10 +40,10 @@ def run_eda_app() :
     st.dataframe(df_min)
 
 
-    st.subheader('컬럼 별 히스토그램')
+    st.subheader('각 컬럼의 히스토그램')
 
     histogram_column = st.selectbox('히스토그램 확인할 컬럼을 선택하세요.', column_list)
-    my_bins = st.number_input('빈의 갯수를 입력하세요', 10, 30, value=10, step=1)
+    my_bins = st.number_input('빈의 개수를 입력하세요', 10, 30, value=10, step=1)
 
     fig1 = plt.figure()
     plt.hist(data= df, x=histogram_column, rwidth=0.8, bins=my_bins)
@@ -54,11 +55,8 @@ def run_eda_app() :
 
 
     st.subheader('상관 관계 분석')
-
     selected_list = st.multiselect('상관분석을 하고싶은 컬럼을 선택하세요', column_list)
-
     if len(selected_list) >= 2 :
-
         df_corr = df[ selected_list ].corr()
 
         fig2 = plt.figure()
