@@ -1,37 +1,35 @@
 import streamlit as st
 import numpy as np
-import joblib
-def run_ml_app():
-    st.subheader('지역별 공무원 연금가입 예측건 수')
-    gender = st.radio('성별 선택', ['여자', '남자'])
-    if st.button('데이터프레임 보기'):
-        st.dataframe(df)
+import pandas as pd
+# plotly 라이브러리 
+import plotly.express as px
+# altair 라이브러리
+import altair as alt
 
-    if gender == '여자' :
-        gender = 0
-    else :
-        gender = 1
-    age = st.number_input('나이 입력', 18, 100)
+def run_plotly_app():
+    df = pd.read_csv('data/공무원연금공단_공무원연금주요통계(지역별 가입자 추이)_20211231.csv', encoding='MS949')
 
-    salary = st.number_input('연봉 입력', 10000, 1000000)
+    st.dataframe(df.head())
 
-    debt = st.number_input('카드빚 입력', 0, 1000000)
+    column_menu = df.columns[ 1 : ]
 
-    worth = st.number_input('자산 입력', 1000, 10000000)
+    choice_list = st.multiselect('지역을 선택하세요.', column_menu)
 
-    new_data = np.array([gender, age, salary, debt, worth])
-
-    print(new_data)
-
-    new_data = new_data.reshape(1, 5)
-
-    regressor = joblib.load('regressor.pkl')
-
-    y_pred = regressor.predict(new_data)
-
-    y_pred = round(y_pred[0] , 1)
-
-    if y_pred < 0 :
-        st.info('입력한 데이터로는 금액을 예측하기 어렵습니다.')    
-    else :
-        st.info('지역별 공무원 연금가입은 {}달러 입니다.'.format(y_pred))
+    if len(choice_list) != 0 :
+        # 유저가 선택한 언어만, 차트를 그린다.
+        df_selected = df[choice_list]
+        ## 스트림릿에서 제공하는 라인차트 
+        st.line_chart(df_selected)
+        ## 스트림릿에서 제공하는 영역차트 
+        st.area_chart(df_selected)
+        ## 스트림릿에서 제공하는 바차트
+        st.bar_chart(df_selected)
+    df2 = pd.read_csv('data/공무원연금공단_공무원연금주요통계(지역별 가입자 추이)_20211231.csv', encoding='MS949')
+    ### altair 라이브러리의 mark_cicle 함수 사용법
+    chart = alt.Chart(df2).mark_circle().encode(
+        x='petal_length',
+        y='petal_width',
+        color = 'species')
+    st.altair_chart(chart)
+if __name__ == '__main__' :
+    main()    
