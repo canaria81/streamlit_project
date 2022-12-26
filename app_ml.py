@@ -2,18 +2,15 @@ import streamlit as st
 import numpy as np
 import joblib
 def run_ml_app():
-    st.subheader('자동차 금액 예측')
-    
-    # 성별, 나이, 연봉, 카드빚, 자산을 유저한테 모두 입력받아서
-    # 자동차 구매 금액 예측하세요.
-
+    st.subheader('지역별 공무원 연금가입 예측건 수')
     gender = st.radio('성별 선택', ['여자', '남자'])
-    
+    if st.button('데이터프레임 보기'):
+        st.dataframe(df)
+
     if gender == '여자' :
         gender = 0
     else :
         gender = 1
-
     age = st.number_input('나이 입력', 18, 100)
 
     salary = st.number_input('연봉 입력', 10000, 1000000)
@@ -37,4 +34,4 @@ def run_ml_app():
     if y_pred < 0 :
         st.info('입력한 데이터로는 금액을 예측하기 어렵습니다.')    
     else :
-        st.info('예측한 자동차 금액은 {}달러 입니다.'.format(y_pred))
+        st.info('지역별 공무원 연금가입은 {}달러 입니다.'.format(y_pred))
